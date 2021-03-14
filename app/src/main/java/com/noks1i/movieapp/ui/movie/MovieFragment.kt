@@ -10,8 +10,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import com.noks1i.movieapp.R
 import com.noks1i.movieapp.core.Resource
+import com.noks1i.movieapp.data.local.AppDatabase
+import com.noks1i.movieapp.data.local.LocalMovieDataSource
 import com.noks1i.movieapp.data.model.Movie
-import com.noks1i.movieapp.data.remote.MovieDataSource
+import com.noks1i.movieapp.data.remote.RemoteMovieDataSource
 import com.noks1i.movieapp.databinding.FragmentMovieBinding
 import com.noks1i.movieapp.presentation.MovieViewModel
 import com.noks1i.movieapp.presentation.MovieViewModelFactory
@@ -33,7 +35,8 @@ class MovieFragment : Fragment(R.layout.fragment_movie), MovieAdapter.OnMovieCli
     private val viewModel by viewModels<MovieViewModel> {
         MovieViewModelFactory(
             MovieRepositoryImpl(
-                MovieDataSource(RetrofitClient.webService)
+                RemoteMovieDataSource(RetrofitClient.webService),
+                LocalMovieDataSource(AppDatabase.getDatabase(requireContext()).movieDao())
             )
         )
     }
